@@ -1,0 +1,73 @@
+livro-emprestimo/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── seuaplicativo/
+│   │   │           ├── LivroEmprestimoApplication.java
+│   │   │           ├── controller/
+│   │   │           │   └── LivroController.java
+│   │   │           ├── model/
+│   │   │           │   └── Livro.java
+│   │   │           └── repository/
+│   │   │               └── LivroRepository.java
+│   │   └── resources/
+│   │       └── application.properties
+└── pom.xml
+package com.seuaplicativo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class LivroEmprestimoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(LivroEmprestimoApplication.class, args);
+    }
+}
+package com.seuaplicativo.model;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class Livro {
+    @Id
+    private Long id;
+    private String titulo;
+    private String autor;
+
+    // Getters e Setters
+}
+package com.seuaplicativo.repository;
+
+import com.seuaplicativo.model.Livro;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface LivroRepository extends JpaRepository<Livro, Long> {}
+package com.seuaplicativo.controller;
+
+import com.seuaplicativo.model.Livro;
+import com.seuaplicativo.repository.LivroRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/livros")
+public class LivroController {
+    @Autowired
+    private LivroRepository livroRepository;
+
+    @GetMapping
+    public List<Livro> listarLivros() {
+        return livroRepository.findAll();
+    }
+
+    @PostMapping
+    public Livro adicionarLivro(@RequestBody Livro livro) {
+        return livroRepository.save(livro);
+    }
+}
+
